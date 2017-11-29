@@ -20,7 +20,7 @@ func (l Locations) String() string {
 }
 
 func main(){
-  resp, _ := http.Get("https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-ltc")
+  resp, _ := http.Get("https://bittrex.com/home/markets")
   bytes, _ := ioutil.ReadAll(resp.Body)
   string_body := string(bytes)
   fmt.Println(string_body)
