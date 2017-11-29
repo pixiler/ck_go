@@ -3,31 +3,31 @@ package main
 import ( "fmt"
 "net/http"
 "io/ioutil"
-//"encoding/xml"
+"encoding/json"
 )
 
-type SitemapIndex struct {
-  Locations []Locations `xml:"sitemap"`
+type result struct {
+   Currency []Currency `json:"result"`
 }
 
-type Locations struct {
-    Loc string `xml:"loc"`
+type Currency struct {
+    Cur string `json:"Currency"`
 }
 
-func (l Locations) String() string {
-  return fmt.Sprintf(l.Loc)
+func (l Currency) String() string {
+  return fmt.Sprintf(l.Cur)
 
 }
 
 func main(){
   resp, _ := http.Get("https://bittrex.com/api/v1.1/public/getcurrencies")
-  bytes, _ := ioutil.ReadAll(resp.Body)
-  string_body := string(bytes)
-  fmt.Println(string_body)
+  body, _ := ioutil.ReadAll(resp.Body)
+  //string_body := string(bytes)
+  //fmt.Println(string_body)
   resp.Body.Close()
 
-  //var s SitemapIndex
-  //xml.Unmarshal(bytes, &s)
-  //fmt.Println(s.Locations)
+  s := result{}
+  json.Unmarshal(body, &s)
+  fmt.Println(s.Currency)
 
 }
