@@ -4,7 +4,6 @@ import ( "fmt"
 "net/http"
 "io/ioutil"
 "encoding/json"
-"strings"
 )
 
 type result struct {
@@ -14,6 +13,7 @@ type result struct {
 
 type Currency struct {
     Cur string `json:"Currency"`
+    
 }
 
 type Quantity struct {
@@ -38,18 +38,25 @@ func main(){
   s := result{}
   bit := result{}
   json.Unmarshal(body, &s)
+  fmt.Println(s.Currency)
+  var url_cur string = "https://bittrex.com/api/v1.1/public/getmarkethistory?market=BTC-"
+  url_cur = url_cur + s.Currency[0].Cur
 
-  for index := 0; index < len(s.Currency); index++ {
-    var url_cur string  = "https://bittrex.com/api/v1.1/public/getmarkethistory?market=BTC-"
-    //url_cur += s.Currency[index]
-    //url_cur = strings.Contains(url_cur,s.Currency[index])
-    string_body := string(s.Currency)
-    url, _ := http.Get(strings.Contains(url_cur,string_body))
+  url, _ := http.Get(url_cur)
+  body, _ := ioutil.ReadAll(url.Body)
+  json.Unmarshal(body, &bit)
+  fmt.Println(bit.Quantity)
+  url.Body.Close()
+/*  for index := 0; index < len(s.Currency); index++ {
+    var url_cur string = "https://bittrex.com/api/v1.1/public/getmarkethistory?market=BTC-"
+    url_cur = url_cur + s.Currency[index].Cur
+    url, _ := http.Get(url_cur)
     body, _ := ioutil.ReadAll(url.Body)
     json.Unmarshal(body, &bit)
     fmt.Println(bit.Quantity)
+    url.Body.Close()
   }
-
+*/
   //fmt.Println(s.Currency)
 
 }
